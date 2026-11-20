@@ -27,7 +27,7 @@ if not post_text:
 
 base_url = f"https://graph.threads.net/v1.0/{USER_ID}"
 
-res = requests.post(f"{base_url}/threads", params={
+res = requests.post(f"{base_url}/threads", data={
     "media_type": "TEXT",
     "text": post_text,
     "access_token": ACCESS_TOKEN,
@@ -35,7 +35,7 @@ res = requests.post(f"{base_url}/threads", params={
 res.raise_for_status()
 container_id = res.json()["id"]
 
-res2 = requests.post(f"{base_url}/threads_publish", params={
+res2 = requests.post(f"{base_url}/threads_publish", data={
     "creation_id": container_id,
     "access_token": ACCESS_TOKEN,
 })
