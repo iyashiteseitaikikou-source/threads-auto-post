@@ -32,6 +32,8 @@ res = requests.post(f"{base_url}/threads", data={
     "text": post_text,
     "access_token": ACCESS_TOKEN,
 })
+if not res.ok:
+    print(f"APIエラー詳細: {res.text}")
 res.raise_for_status()
 container_id = res.json()["id"]
 
