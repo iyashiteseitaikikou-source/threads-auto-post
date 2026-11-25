@@ -2,6 +2,7 @@
 import os
 import json
 import glob
+import time
 import requests
 from datetime import datetime
 import pytz
@@ -37,10 +38,16 @@ if not res.ok:
 res.raise_for_status()
 container_id = res.json()["id"]
 
-res2 = requests.post(f"{base_url}/threads_publish", data={
-    "creation_id": container_id,
-    "access_token": ACCESS_TOKEN,
-})
-res2.raise_for_status()
+for attempt in range(3):
+    time.sleep(2)
+    res2 = requests.post(f"{base_url}/threads_publish", data={
+        "creation_id": container_id,
+        "access_token": ACCESS_TOKEN,
+    })
+    if res2.ok:
+        break
+    print(f"publishエラー(試行{attempt+1}/3): {res2.status_code} {res2.text}")
+    if attempt == 2:
+        res2.raise_for_status()
 
 print(f"投稿完了: {today} {TIME_SLOT}時 → ID: {res2.json()['id']}")
